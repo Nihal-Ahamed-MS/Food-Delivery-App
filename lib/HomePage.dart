@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                 }
               }
               print(time);
-              navigateToDetails(snapshot.data.documents[i].data['userId'], time,snapshot.data.documents[i].documentID);
+              navigateToDetails(snapshot.data.documents[i].data['userId'], time,snapshot.data.documents[i].documentID,snapshot.data.documents[i].data['total']);
               },
             ),
                 );
@@ -91,8 +91,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  navigateToDetails(String id,String currentTime,String docID){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Details(userId:id,time:currentTime,docId: docID),));
+  navigateToDetails(String id,String currentTime,String docID,int total){
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Details(userId:id,time:currentTime,docId: docID,total: total,),));
   }
   
 } 

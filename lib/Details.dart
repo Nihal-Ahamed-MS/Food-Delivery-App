@@ -7,8 +7,9 @@ class Details extends StatefulWidget {
   final userId;
   final time;
   final docId;
+  final total;
 
-  Details({this.userId,this.time,this.docId});
+  Details({this.userId,this.time,this.docId,this.total});
 
   @override
    _DetailsState createState() => _DetailsState();
@@ -33,9 +34,10 @@ class _DetailsState extends State<Details> {
       });
     });
   }
+//TODO: Since the accessing the dataSnapshots is not poosbile the HotelBasicInfo collection is removed so to get hotel info we need query to document fields.
 
   gethotelDetails(String id) async {
-    await Firestore.instance.collection('HotelManagement').document(id).collection('HotelBasicInfo').document('QOSkKtjcp7abXG183FiI').get().then((value){
+    await Firestore.instance.collection('HotelManagement').document(id).collection('HotelBasicInfo').document('Zc38qxhbZ1v4kiD7sooP').get().then((value){
       setState(() {
         hotelAddress = value.data['address'];
         hotelName = value.data['name'];
@@ -150,13 +152,55 @@ class _DetailsState extends State<Details> {
                children: <Widget>[
                  Container(
                    alignment: Alignment.centerLeft,
-                   child: Text("User Information:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0),),
+                   child: Text("ORDER SUMMARY: ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0),),
                  ),
+
+                 //TODO: The name and address are hard coded need to be update when the user screen is finished.
                  SizedBox(height: 5.0,),
-                  Container(
-                   alignment: Alignment.centerLeft,
-                   child: Text(widget.time,style: TextStyle(fontSize: 18.0),),
-                 ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("Name: ", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
+                        
+                        Text("Lucifer", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.grey[500]))
+                      ],
+                    ),
+                    SizedBox(height: 5.0,),
+                  Column(
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Address :", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
+                        Container(
+                          width: MediaQuery.of(context).size.width*10.0,
+                          child: SelectableText.rich(
+                          TextSpan(
+                            text: "\t\t\t\t\t\t\t21, West Car Street, Chidambaram", 
+                            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.grey[500])
+                          )
+                        )
+                        )
+                       
+                      ],
+                    ),
+                 SizedBox(height: 5.0,),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("Order time:", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
+                        
+                        Text(widget.time, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.grey[500]))
+                      ],
+                    ),
+                    SizedBox(height: 5.0,),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
+                        
+                        Text(widget.total.toString(), style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.grey[500]))
+                      ],
+                    ),
                ],
              ),
            ),
