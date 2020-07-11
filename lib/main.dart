@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
-
+import 'Screens/HomePage.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -9,9 +8,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Delivery Partner',
       home: HomePage(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue
-      ),
+      debugShowCheckedModeBanner: false,
+      // theme: ThemeData(
+      //   primarySwatch: Colors.blue
+      // ),
     );
   }
 }

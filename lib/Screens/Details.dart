@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'OrderManagement.dart';
+import 'package:deliverypartner/Services/OrderManagement.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -37,7 +37,7 @@ class _DetailsState extends State<Details> {
 //TODO: Since the accessing the dataSnapshots is not poosbile the HotelBasicInfo collection is removed so to get hotel info we need query to document fields.
 
   gethotelDetails(String id) async {
-    await Firestore.instance.collection('HotelManagement').document(id).collection('HotelBasicInfo').document('Zc38qxhbZ1v4kiD7sooP').get().then((value){
+    await Firestore.instance.collection('HotelManagement').document(id)..get().then((value){
       setState(() {
         hotelAddress = value.data['address'];
         hotelName = value.data['name'];
@@ -56,10 +56,31 @@ class _DetailsState extends State<Details> {
    @override
    Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
-         title: Text('Details'),
-       ),
-       body: finalOrder()
+      backgroundColor: Colors.blueAccent,
+       body: Stack(
+         children: <Widget>[
+           Positioned(
+                child: AppBar(
+                  leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: (){Navigator.of(context).pop();}),
+                  backgroundColor: Colors.transparent,
+                  centerTitle: true,
+                  title: Text("Delivery Partner", style: TextStyle(fontSize: 20.0, fontFamily: 'Montserrat')),
+                 ),
+              ),
+               SizedBox(height: 50),
+              Positioned(
+                top: 80.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white
+                  ),
+                  height: MediaQuery.of(context).size.height - 50.0,
+                  width: MediaQuery.of(context).size.width,
+                )
+              ),
+              finalOrder()
+         ],
+       )
     );
   }
 
@@ -70,25 +91,46 @@ class _DetailsState extends State<Details> {
        barrierDismissible: false,
        builder: (BuildContext context){
          return AlertDialog(
-           title: Text('Hotel Information', style: TextStyle(fontSize: 22.0)),
+           title: Text('Hotel Information:', style: TextStyle(fontSize: 22.0)),
            content: Container(
-             height: 150.0,
+             height: 80.0,
              child: Column(
                mainAxisAlignment: MainAxisAlignment.start,
                children: <Widget>[
                 Container(
                      alignment: Alignment.centerLeft,
-                     child: Text(hotelName,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                     child: Row(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: <Widget>[
+                         Text("Name :",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                         Text(hotelName,style: TextStyle(fontSize: 18),),
+                       ],
+                     )
                    ),
                  SizedBox(height: 5.0,),
                   Container(
                      alignment: Alignment.centerLeft,
-                     child: Text(hotelphone,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
+                     child: Row(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: <Widget>[
+                         Text("Phone no :",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                         Text(hotelphone,style: TextStyle(fontSize: 18),),
+                       ],
+                     )
                    ),
                  SizedBox(height: 5.0,),
                   Container(
                      alignment: Alignment.centerLeft,
-                     child: Text(hotelAddress,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
+                     child: Row(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: <Widget>[
+                         Text("Address :",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                         Text(hotelAddress,style: TextStyle(fontSize: 18),),
+                       ],
+                     )
                    ),
                ],
              ),
@@ -111,15 +153,19 @@ class _DetailsState extends State<Details> {
     if(finalList != null){
       return Column(
         children: <Widget>[
+          Container(
+                height: 100.0,
+              ),
           Expanded(
             child :  StreamBuilder(
           stream: finalList,
           builder: (context,snapshot){
-            return ListView.builder(
+            return (snapshot.data.documents.length == null)? CircularProgressIndicator(): ListView.builder(
                 padding: EdgeInsets.all(5.0),
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context,i){
                   return Card(
+                    elevation: 7.0,
                  child: ListTile(
                     title: Text(snapshot.data.documents[i].data['name']),
                     subtitle : Text(snapshot.data.documents[i].data['price']),
@@ -162,7 +208,7 @@ class _DetailsState extends State<Details> {
                       children: <Widget>[
                         Text("Name: ", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
                         
-                        Text("Lucifer", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.grey[500]))
+                        Text("Lucifer", style: TextStyle(fontSize: 20,color: Colors.grey[500]))
                       ],
                     ),
                     SizedBox(height: 5.0,),
@@ -176,7 +222,7 @@ class _DetailsState extends State<Details> {
                           child: SelectableText.rich(
                           TextSpan(
                             text: "\t\t\t\t\t\t\t21, West Car Street, Chidambaram", 
-                            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.grey[500])
+                            style: TextStyle(fontSize: 20,color: Colors.grey[500])
                           )
                         )
                         )
@@ -189,16 +235,16 @@ class _DetailsState extends State<Details> {
                       children: <Widget>[
                         Text("Order time:", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
                         
-                        Text(widget.time, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.grey[500]))
+                        Text(widget.time, style: TextStyle(fontSize: 20,color: Colors.grey[500]))
                       ],
                     ),
                     SizedBox(height: 5.0,),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
+                        Text("Total Amount:", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black)),
                         
-                        Text(widget.total.toString(), style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.grey[500]))
+                        Text(widget.total.toString(), style: TextStyle(fontSize: 20,color: Colors.grey[500]))
                       ],
                     ),
                ],
@@ -224,7 +270,7 @@ class _DetailsState extends State<Details> {
                 fontSize: 25
               ),
             ),
-            color: Colors.blue,
+            color: Colors.blueAccent,
           ),
         )
       )
